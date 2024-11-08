@@ -46,10 +46,21 @@ public class GUI {
 
         centerPanel.setLayout(new GridLayout(1,1));
         centerPanel.add(scrollPane);
-        textArea.append(username + " CONNECTED");
+        textArea.append(username + " Logged in");
 
         bottomPanel.setLayout(new GridLayout(1,1));
         bottomPanel.add(textField);
 
     }
+
+    public JTextField getTextField() {
+        return textField;
+    }
+
+    public JTextArea getTextArea() {
+        return textArea;
+    }
+
+
+
 }

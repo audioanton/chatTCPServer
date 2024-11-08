@@ -1,3 +1,5 @@
+package Server;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -20,9 +22,12 @@ public class ClientConnection implements Runnable {
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
             out.println("Connection Established.");
-            String incomingMessage = in.readLine();
-            database.addMessage(incomingMessage);
-            out.println(database.getMessages());
+
+            while (true) {
+                String incomingMessage = in.readLine();
+                database.addMessage(incomingMessage);
+                out.println(database.getMessages());
+            }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
