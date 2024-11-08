@@ -18,7 +18,8 @@ public class ClientConnection implements Runnable {
     }
 
     public void initializeClientConnection() {
-        try (PrintWriter out = new PrintWriter(socket.getOutputStream());
+        System.out.println(socket.getInetAddress().getHostAddress());
+        try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
             out.println("Connection Established.");
