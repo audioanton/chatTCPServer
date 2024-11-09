@@ -41,9 +41,12 @@ public class Chat implements Runnable {
             try (Socket socket = new Socket(ip,port);
                  PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
                 out.println("--JOIN_REQUEST-- " + username);
+
                 String serverResponse = in.readLine();
                 gui.getTextArea().append(serverResponse + "\n");
+
                 String message;
                 while ((message = in.readLine()) != null) {
                     gui.getTextArea().append(message + "\n");

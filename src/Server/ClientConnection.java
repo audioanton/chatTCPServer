@@ -37,7 +37,9 @@ public class ClientConnection implements Runnable {
                 server.clients.add(this);
                 server.broadcast(response + " has joined the chat");
 
-            } else {
+            }
+
+            else {
                 database.addMessage(incomingMessage);
                 server.broadcast(incomingMessage);
                 out.close();
@@ -49,35 +51,7 @@ public class ClientConnection implements Runnable {
             e.printStackTrace();
         }
     }
-//        try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-//            System.out.println("testing");
-//
-//
-//
-//
-//
-//                out.println("Connection Established.");
-//                String incomingMessage = in.readLine();
-//
-//                if (incomingMessage.equals("listening")) {
-//                    System.out.println("adding client to list");
-//                    server.clients.add(this);
-//                }
-//
-//                else {
-//                    database.addMessage(incomingMessage);
-//                    out.println(database.getMessages());
-//                    server.broadcast(incomingMessage);
-//                }
-//
-//
-//
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 
     public void sendMessage(String message) {
         System.out.println("client sending message through broadcast");
