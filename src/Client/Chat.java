@@ -32,21 +32,25 @@ public class Chat implements Runnable {
     public void run() {
         gui = new GUI(username);
         gui.init();
-        addEventListeners();
+
         new Thread(() -> {
+            System.out.println("starting client listening thread");
             try (Socket socket = new Socket(ip,port);
                  PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-
+                System.out.println("trying listening connection");
+                out.println("listening");
                 String message;
                 while ((message = in.readLine()) != null) {
-                    gui.getTextArea().append(message);
+                    gui.getTextArea().append("\n" + message);
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        }).start();
+
+        addEventListeners();
     }
 
     public void addEventListeners() {
@@ -60,12 +64,11 @@ public class Chat implements Runnable {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-            String mess = in.readLine();
-            System.out.println(mess);
 
-            out.println(message);
 
-            gui.getTextArea().setText(in.lines().collect(Collectors.joining("\n")));
+            out.println(username +": " + message);
+
+//            gui.getTextArea().append("\n" + message);
 
 
         } catch (Exception e) {

@@ -7,6 +7,8 @@ public class ClientConnection implements Runnable {
     Socket socket;
     Database database;
     Server server;
+    PrintWriter out;
+    BufferedReader in;
 
     public ClientConnection(Socket socket, Database database, Server server) {
         this.socket = socket;
@@ -20,35 +22,63 @@ public class ClientConnection implements Runnable {
     }
 
     public void initializeClientConnection() {
-        System.out.println(socket.getInetAddress().getHostAddress());
-        try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            System.out.println("testing");
 
 
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 
+            String incomingMessage = in.readLine();
 
-                out.println("Connection Established.");
-                String incomingMessage = in.readLine();
+            if (incomingMessage.equals("listening")) {
+                System.out.println("adding client to list");
+                server.clients.add(this);
+            } else {
                 database.addMessage(incomingMessage);
-                out.println(database.getMessages());
-
+//                out.println(incomingMessage);
                 server.broadcast(incomingMessage);
+                out.close();
+                in.close();
+            }
 
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
+//        try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+//             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+//            System.out.println("testing");
+//
+//
+//
+//
+//
+//                out.println("Connection Established.");
+//                String incomingMessage = in.readLine();
+//
+//                if (incomingMessage.equals("listening")) {
+//                    System.out.println("adding client to list");
+//                    server.clients.add(this);
+//                }
+//
+//                else {
+//                    database.addMessage(incomingMessage);
+//                    out.println(database.getMessages());
+//                    server.broadcast(incomingMessage);
+//                }
+//
+//
+//
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public void sendMessage(String message) {
-        System.out.println("Got here");
-        try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            out.println(message);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("client sending message through broadcast");
+        out.println(message);
     }
 }
