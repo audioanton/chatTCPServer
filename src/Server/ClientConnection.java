@@ -61,11 +61,24 @@ public class ClientConnection implements Runnable {
         in.close();
     }
 
-    private void handleTerminationRequest(Request request) {
+    private void handleTerminationRequest(Request request) throws IOException {
+
+        ClientConnection clientConnectionToTerminate = server.clients.stream().filter(client -> client.getClientID() == request.getClientID()).findFirst().get();
+        clientConnectionToTerminate.out.println("Terminating connection");
+        clientConnectionToTerminate.out.close();
+        clientConnectionToTerminate.in.close();
+        server.broadcast(request.getUsername() + " has left the chat :(");
+        server.clients.remove(clientConnectionToTerminate);
+        out.close();
+        in.close();
         System.out.println("Client " + request.getClientID() + "disconnected");
     }
 
     public void sendMessage(String message) {
         out.println(message);
+    }
+
+    public int getClientID() {
+        return clientID;
     }
 }

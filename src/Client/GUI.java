@@ -62,5 +62,7 @@ public class GUI {
     }
 
 
-
+    public JButton getDisconnectButton() {
+        return disconnectButton;
+    }
 }
