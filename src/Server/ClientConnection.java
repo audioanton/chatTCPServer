@@ -71,7 +71,6 @@ public class ClientConnection implements Runnable {
         server.clients.remove(clientConnectionToTerminate);
         out.close();
         in.close();
-        System.out.println("Client " + request.getClientID() + "disconnected");
     }
 
     public void sendMessage(String message) {
