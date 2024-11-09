@@ -14,7 +14,6 @@ public class Chat implements Runnable {
     GUI gui;
     InetAddress ip;
     int port;
-    Socket socket;
     String username;
 
     public Chat(int port, String username) {
@@ -33,24 +32,27 @@ public class Chat implements Runnable {
         gui = new GUI(username);
         gui.init();
 
+        startServerListenerThread();
+        addEventListeners();
+    }
+
+    private void startServerListenerThread() {
         new Thread(() -> {
-            System.out.println("starting client listening thread");
             try (Socket socket = new Socket(ip,port);
                  PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                System.out.println("trying listening connection");
-                out.println("listening");
+                out.println("--JOIN_REQUEST-- " + username);
+                String serverResponse = in.readLine();
+                gui.getTextArea().append(serverResponse + "\n");
                 String message;
                 while ((message = in.readLine()) != null) {
-                    gui.getTextArea().append("\n" + message);
+                    gui.getTextArea().append(message + "\n");
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
-
-        addEventListeners();
     }
 
     public void addEventListeners() {
@@ -61,15 +63,9 @@ public class Chat implements Runnable {
 
     public void sendMessage(String message) {
         try (Socket socket = new Socket(ip,port);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-
-
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 
             out.println(username +": " + message);
-
-//            gui.getTextArea().append("\n" + message);
-
 
         } catch (Exception e) {
                 e.printStackTrace();

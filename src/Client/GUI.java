@@ -26,7 +26,7 @@ public class GUI {
         textArea  = new JTextArea();
         scrollPane  = new JScrollPane(textArea);
         disconnectButton = new JButton("Disconnect");
-        textField = new JTextField("Write something here...");
+        textField = new JTextField();
     }
 
     public void init() {
@@ -46,7 +46,7 @@ public class GUI {
 
         centerPanel.setLayout(new GridLayout(1,1));
         centerPanel.add(scrollPane);
-        textArea.append(username + " Logged in");
+
 
         bottomPanel.setLayout(new GridLayout(1,1));
         bottomPanel.add(textField);

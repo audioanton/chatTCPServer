@@ -31,12 +31,14 @@ public class ClientConnection implements Runnable {
 
             String incomingMessage = in.readLine();
 
-            if (incomingMessage.equals("listening")) {
+            if (incomingMessage.contains("--JOIN_REQUEST--")) {
+                String response = incomingMessage.split(" ")[1];
                 System.out.println("adding client to list");
                 server.clients.add(this);
+                server.broadcast(response + " has joined the chat");
+
             } else {
                 database.addMessage(incomingMessage);
-//                out.println(incomingMessage);
                 server.broadcast(incomingMessage);
                 out.close();
                 in.close();
