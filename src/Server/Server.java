@@ -3,19 +3,29 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server implements Runnable {
     Database database;
     int port;
     Socket socket;
+    List<ClientConnection> clients;
 
     public Server(int port) {
         database = new Database();
         this.port = port;
+        clients = new ArrayList<>();
     }
 
     public void run() {
         startServer();
+    }
+
+    public void broadcast(String message) {
+        for (ClientConnection client : clients) {
+            client.sendMessage(message);
+        }
     }
 
     public void startServer() {
@@ -23,17 +33,12 @@ public class Server implements Runnable {
             System.out.println("Server started");
             while (true) {
 
-                try {
-                    socket = ss.accept();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                socket = ss.accept();
+
                 System.out.println("Client connected");
-                new Thread(new ClientConnection(socket, database)).start();
-//                try (Socket socket = ss.accept()) {
-//                    System.out.println("Client connected");
-//                    new Thread(new ClientConnection(socket, database)).start();
-//                }
+
+                new Thread(new ClientConnection(socket, database, this)).start();
             }
 
         } catch (IOException e) {
