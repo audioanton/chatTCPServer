@@ -18,7 +18,7 @@ public class GUI {
 
     public GUI(String username) {
         this.username = username;
-        frame = new JFrame();
+        frame = new JFrame(username);
         mainPanel = new JPanel();
         topPanel = new JPanel();
         centerPanel = new JPanel();

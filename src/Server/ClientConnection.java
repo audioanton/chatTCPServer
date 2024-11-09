@@ -30,32 +30,14 @@ public class ClientConnection implements Runnable {
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new ObjectInputStream(socket.getInputStream());
-//            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             Request request = (Request) in.readObject();
-
 
             switch (request.getRequestType()) {
                 case LISTENING -> handleListeningRequest(request);
                 case MESSAGE -> handleMessageRequest(request);
                 case TERMINATION -> handleTerminationRequest(request);
             }
-
-//            String incomingMessage = in.readLine();
-
-//            if (incomingMessage.contains("--JOIN_REQUEST--")) {
-//                String response = incomingMessage.split(" ")[1];
-//                server.clients.add(this);
-//                server.broadcast(response + " has joined the chat");
-//
-//            }
-//
-//            else {
-//                database.addMessage(incomingMessage);
-//                server.broadcast(incomingMessage);
-//                out.close();
-//                in.close();
-//            }
 
 
         } catch (IOException e) {

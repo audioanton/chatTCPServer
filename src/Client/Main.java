@@ -6,7 +6,7 @@ public class Main {
         new Thread(chat).start();
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
 
         }

@@ -3,12 +3,11 @@ package Client;
 import Requests.Request;
 import Requests.RequestType;
 
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.stream.Collectors;
+
 
 public class Chat implements Runnable {
     private static int clientIDIncrementor = 1;
@@ -46,11 +45,10 @@ public class Chat implements Runnable {
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
                 out.writeObject(new Request(clientID, RequestType.LISTENING, username, ""));
-//                out.println("--JOIN_REQUEST-- " + username);
 
-                String message;
-                while ((message = in.readLine()) != null) {
-                    gui.getTextArea().append(message + "\n");
+                String broadcastedMessageFromServer;
+                while ((broadcastedMessageFromServer = in.readLine()) != null) {
+                    gui.getTextArea().append(broadcastedMessageFromServer + "\n");
                 }
 
             } catch (IOException e) {
