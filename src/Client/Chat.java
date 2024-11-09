@@ -44,9 +44,6 @@ public class Chat implements Runnable {
 
                 out.println("--JOIN_REQUEST-- " + username);
 
-                String serverResponse = in.readLine();
-                gui.getTextArea().append(serverResponse + "\n");
-
                 String message;
                 while ((message = in.readLine()) != null) {
                     gui.getTextArea().append(message + "\n");

@@ -32,12 +32,7 @@ public class Server implements Runnable {
         try (ServerSocket ss = new ServerSocket(port)) {
             System.out.println("Server started");
             while (true) {
-
-
                 socket = ss.accept();
-
-                System.out.println("Client connected");
-
                 new Thread(new ClientConnection(socket, database, this)).start();
             }
 

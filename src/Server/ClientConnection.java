@@ -33,7 +33,6 @@ public class ClientConnection implements Runnable {
 
             if (incomingMessage.contains("--JOIN_REQUEST--")) {
                 String response = incomingMessage.split(" ")[1];
-                System.out.println("adding client to list");
                 server.clients.add(this);
                 server.broadcast(response + " has joined the chat");
 
@@ -54,7 +53,6 @@ public class ClientConnection implements Runnable {
 
 
     public void sendMessage(String message) {
-        System.out.println("client sending message through broadcast");
         out.println(message);
     }
 }
