@@ -1,16 +1,18 @@
 package Client;
 
+import Requests.Request;
+import Requests.RequestType;
+
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.stream.Collectors;
 
 public class Chat implements Runnable {
+    private static int clientIDIncrementor = 1;
+    private final int clientID;
     GUI gui;
     InetAddress ip;
     int port;
@@ -23,6 +25,7 @@ public class Chat implements Runnable {
             ip = InetAddress.getLoopbackAddress();
         }
 
+        this.clientID = clientIDIncrementor++;
         this.port = port;
         this.username = username;
 
@@ -39,10 +42,11 @@ public class Chat implements Runnable {
     private void startServerListenerThread() {
         new Thread(() -> {
             try (Socket socket = new Socket(ip,port);
-                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                 ObjectOutputStream out = new ObjectOutputStream((socket.getOutputStream()));
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-                out.println("--JOIN_REQUEST-- " + username);
+                out.writeObject(new Request(clientID, RequestType.LISTENING, username, ""));
+//                out.println("--JOIN_REQUEST-- " + username);
 
                 String message;
                 while ((message = in.readLine()) != null) {
@@ -63,9 +67,9 @@ public class Chat implements Runnable {
 
     public void sendMessage(String message) {
         try (Socket socket = new Socket(ip,port);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+             ObjectOutputStream out = new ObjectOutputStream((socket.getOutputStream()))) {
 
-            out.println(username +": " + message);
+            out.writeObject(new Request(clientID, RequestType.MESSAGE, username, message));
 
         } catch (Exception e) {
                 e.printStackTrace();
